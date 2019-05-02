@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS physicians (
 
 CREATE TABLE IF NOT EXISTS appointments (
   id SERIAL UNIQUE PRIMARY KEY,
-  physicianid INTEGER REFERENCES physician(id),
+  physicianid INTEGER REFERENCES physicians(id),
   appNumber SMALLINT NOT NULL,
   appName text NOT NULL,
   appType text NOT NULL,
