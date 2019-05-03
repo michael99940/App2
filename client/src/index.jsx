@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Physician from './components/physician.jsx';
-import Patient from './components/patient.jsx';
-import format from ('date-fns/format');
+import Appointment from './components/appointment.jsx';
+import format from 'date-fns/format';
 import styles from './components/styles.css.js';
 
 class App extends React.Component {
@@ -11,10 +11,10 @@ class App extends React.Component {
       super(props);
       this.state = { 
         physicians: [],
-        patients: [],
+        appointments: [],
         selected: null,
       }
-      this.getPatients = this.getPatients.bind(this);
+      this.getAppointments = this.getAppointments.bind(this);
     }
 
     componentDidMount() {
@@ -31,31 +31,42 @@ class App extends React.Component {
         });
     }
 
-    getPatients(id) {
+    getAppointments(id, name) {
         $.ajax({
-            url: `http://${document.URL.split('/')[2]}/appointments/ID:=${ID}&date=:${format(Date.parse(Date.now()), 'MMDDYY')}`,
+            url: `http://${document.URL.split('/')[2]}/appointments/ID=${id}&date=${format(Date(Date.now()), 'MMDDYY')}`,
             success: (data) => {
                 this.setState({
-                    patients: data,
+                    appointments: data,
                     selected: id,
-                    selectedName: 
+                    selectedName: name
                 })
             }
         })
     }
 
-    render() {
-        <div style={styles.MainCont}>
-            {this.state.physicians.map((physician) => {
-                <Physician name={physician.name} id={physician.id} click={this.getPatients} selected={this.state.selected}/>
-            })}
-            {this.state.patients.map((patient) => {
-                <Patient name={patient.name} type ={patient.type} time={patient.time} />
-            })}
+  render() {
+    return (
+      <div style={styles.MainCont}>
+        <h1 style={styles.Header}>Notable Appointment List</h1>
+        <div style={styles.PhyMainCont}>
+        <div style={Object.assign({},styles.PhyCont,{fontSize: '20px', border: 'solid', borderRadius: '1px'})}><b>Doctor Name</b></div>
+        {this.state.physicians.map((physician) => (
+            <Physician name={physician.physicianname} id={physician.id} click={this.getAppointments} selected={this.state.selected}/>
+          ))}
         </div>
-
-    }
-
+        <div style={styles.AppMainCont}>
+        <h1 style={styles.Header}>Patient List</h1>
+        <div style={styles.AppCont}>
+          <div style={Object.assign({paddingTop:'10px',paddingBottom:'10px'},styles.AppRow1)}>Name</div>
+          <div style={Object.assign({paddingTop:'10px',paddingBottom:'10px'},styles.AppRow2)}>Time</div>
+          <div style={Object.assign({paddingTop:'10px',paddingBottom:'10px'},styles.AppRow3)}>Meeting Type</div>
+        </div>
+        {this.state.appointments.map((appointment) => (
+            <Appointment name={appointment.appname} type ={appointment.apptype} time={appointment.apptime} />
+          ))}</div>
+      </div>
+      )
+  }
 }
 
 

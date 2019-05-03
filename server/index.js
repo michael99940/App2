@@ -4,6 +4,9 @@ const db = require('../db/index.js');
 
 const app = express();
 
+app.use(express.static(__dirname + '/../client/dist'));
+app.use(bodyParser());
+
 app.get('/physicians', (req, res) => {
     db.getPhysicians().then(results => {
         res.json(results);
@@ -13,8 +16,8 @@ app.get('/physicians', (req, res) => {
     })
 })
 
-app.get('/appointments/ID:=ID&date=:date', (req, res) => {
-    db.getAppointments(req.body.ID, req.body.date).then(results => {
+app.get('/appointments/ID=:ID&date=:date', (req, res) => {
+    db.getAppointments(req.params.ID, req.params.date).then(results => {
         res.json(results);
     })
     .catch(() => {

@@ -19,7 +19,7 @@ client.connect((err) => {
 
 const getAppointments = (ID, date) => {
     return new Promise((resolve, reject) => {
-        client.query(`SELECT * FROM appointments WHERE physicianid=${ID} AND date=${date}`, (err, res) => {
+        client.query(`SELECT * FROM appointments WHERE physicianid=${ID} AND appDate='${date}'`, (err, res) => {
             if (err) {
                 reject(err);
             } else {
